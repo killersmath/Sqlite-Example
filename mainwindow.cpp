@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QSqlTableModel>
 #include <QListView>
+#include <QSqlQuery>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->tableView->setModel(detailsModel);
 
         connect(ui->listView, &QListView::clicked, [detailsModel](const QModelIndex& index){
-            if(!index.isValid())
+            if(!index.isValid()) // i don't believe it is necessary but verify for safe use.
                 return;
 
             QByteArray recipeName = index.data(Qt::DisplayRole).toByteArray();
