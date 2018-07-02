@@ -5,6 +5,7 @@
 #include <QSqlTableModel>
 #include <QListView>
 #include <QSqlQuery>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,6 +14,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     if(createConnection()){
+        ui->statusBar->setStyleSheet("color: green");
+        QLabel *stat = new QLabel("Database Connected", this);
+        stat->setAlignment(Qt::AlignCenter);
+        ui->statusBar->addWidget(stat, 1);
+
         QSqlQueryModel *recipeModel = new QSqlQueryModel(this);
         QSqlQueryModel *detailsModel = new QSqlQueryModel(this);
         recipeModel->setQuery("SELECT name as 'Recipe' FROM recipes ORDER BY name");
@@ -28,6 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
             detailsModel->setQuery("select RP.ingredient as 'Ingredient', RP.amount as 'Amount' from recipes_details as RP INNER JOIN recipes as R ON R.id = rp.id_recipe AND R.name = '"+recipeName+"'");
         });
+    }
+    else{
+        ui->statusBar->setStyleSheet("color: red");
+        QLabel *stat = new QLabel("Database Disconnected", this);
+        stat->setAlignment(Qt::AlignCenter);
+        ui->statusBar->addWidget(stat, 1);
     }
 }
 
